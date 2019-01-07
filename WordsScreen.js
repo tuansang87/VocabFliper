@@ -34,12 +34,25 @@ export default class WordsScreen extends Component {
         this.props.navigation.goBack();
     }
 
+    deleteWord = (item) => {
+        const arr = this.WORDS.filter(ele => ele.word !== item.word);
+        this.WORDS = [...arr];
+        this.setState({ reload: !this.state.reload });
+        AsyncStorage.setItem("WORDS", JSON.stringify(this.WORDS));
+    }
+
     _renderWord = ({ item }) => {
         return (
-            <TouchableOpacity onPress={this.showWord.bind(this, item)} style={{ width: screenWidth, height: 44, justifyContent: 'center' }}>
-                <Text style={{ color: 'black', paddingLeft: 14 }}>{item.word}</Text>
+            <View style={{ width: screenWidth, height: 44, justifyContent: 'center', flexDirection: 'row' }}>
+                <TouchableOpacity onPress={this.showWord.bind(this, item)} style={{ flex: 1, height: '100%', justifyContent: 'center' }}>
+                    <Text style={{ color: 'black', paddingLeft: 14 }}>{item.word}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.deleteWord.bind(this, item)} style={{ height: '100%', justifyContent: 'center' }}>
+                    <Text style={{ color: 'red', paddingRight: 14 }}>{"Delete"}</Text>
+                </TouchableOpacity>
                 <View style={{ backgroundColor: 'grey', height: 1, width: '100%', position: 'absolute', bottom: 0 }} />
-            </TouchableOpacity>);
+            </View>
+        );
     }
     render() {
         return (
