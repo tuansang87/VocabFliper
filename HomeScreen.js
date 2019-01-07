@@ -11,11 +11,12 @@ import { Platform, StyleSheet, Text, View, Dimensions, TextInput, Image, Touchab
 import FastImage from "react-native-fast-image";
 import FlipCard from 'react-native-flip-card';
 import { Content } from "native-base";
+import { EventRegister } from "react-native-event-listeners";
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default class App extends Component {
+export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.WORDS = [];
@@ -39,6 +40,11 @@ export default class App extends Component {
         this._showWord(this.WORDS[0]);
       }
     })
+    this.showWordLst = EventRegister.addEventListener("SHOW_WORDS", this._showWord);
+  }
+
+  componentWillUnmount() {
+    EventRegister.removeEventListener(this.showWordLst);
   }
 
   _showWord = (item) => {
@@ -164,6 +170,10 @@ export default class App extends Component {
     Linking.openURL(`https://www.google.com/search?q=${this.word}&tbm=isch`);
   }
 
+  _goMyWords = () => {
+    this.props.navigation.navigate("Words");
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -193,6 +203,9 @@ export default class App extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity onPress={this.__lookUp} style={{ width: 100, justifyContent: 'center', alignItems: 'center', backgroundColor: 'purple', marginLeft: 8 }}>
                     <Text style={{ color: 'white', fontWeight: 'bold' }}>Look Up</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this._goMyWords} style={{ width: 100, justifyContent: 'center', alignItems: 'center', }}>
+                    <Text style={{ color: 'purple', fontWeight: 'bold' }}>My Words</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.txtWordContainer}>
